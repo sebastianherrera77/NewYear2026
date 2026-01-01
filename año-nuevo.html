@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Año Nuevo 2025</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        color: #e8e8e8;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    #fireworksCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.6;
+    }
+
+    .container {
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+        padding: 60px 30px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .pantalla-inicial {
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .pantalla-inicial.ocultar {
+        opacity: 0;
+        transform: translateY(-50px);
+        pointer-events: none;
+        position: absolute;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 4.5em;
+        color: #ffffff;
+        margin-bottom: 20px;
+        font-weight: 300;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .subtitle {
+        font-size: 1.3em;
+        color: #a8a8a8;
+        margin-bottom: 50px;
+        font-weight: 300;
+        letter-spacing: 2px;
+    }
+
+    button {
+        padding: 16px 48px;
+        font-size: 1em;
+        background: transparent;
+        color: #ffffff;
+        border: 2px solid #667eea;
+        border-radius: 2px;
+        cursor: pointer;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: -1;
+    }
+
+    button:hover::before {
+        left: 0;
+    }
+
+    button:hover {
+        border-color: #764ba2;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    #mensaje {
+        font-size: 1.1em;
+        line-height: 2;
+        color: #e8e8e8;
+        text-align: justify;
+        background: rgba(26, 26, 46, 0.85);
+        padding: 50px 60px;
+        border-radius: 4px;
+        border-left: 4px solid #667eea;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+        pointer-events: none;
+        max-height: 75vh;
+        overflow-y: auto;
+        max-width: 800px;
+        margin: 0 auto;
+        backdrop-filter: blur(10px);
+        font-weight: 300;
+        letter-spacing: 0.5px;
+    }
+
+    #mensaje::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #mensaje::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+    }
+
+    #mensaje::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 4px;
+    }
+
+    #mensaje::-webkit-scrollbar-thumb:hover {
+        background: #764ba2;
+    }
+
+    #mensaje.mostrar {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .firma {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: right;
+        font-style: italic;
+        color: #a8a8a8;
+    }
+
+    .btn-cerrar {
+        margin-top: 40px;
+        padding: 12px 36px;
+        font-size: 0.9em;
+        background: transparent;
+        color: #a8a8a8;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+        cursor: pointer;
+        font-weight: 400;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        display: none;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .btn-cerrar.mostrar {
+        display: inline-block;
+    }
+
+    .btn-cerrar:hover {
+        color: #ffffff;
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2.5em;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1em;
+        }
+        
+        #mensaje {
+            padding: 30px 25px;
+            font-size: 1em;
+        }
+        
+        button {
+            padding: 14px 32px;
+            font-size: 0.9em;
+        }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="fireworksCanvas"></canvas>
+
+<div class="container">
+    <div class="pantalla-inicial" id="pantallaInicial">
+        <h1>2026</h1>
+        <p class="subtitle">Inicio de un nuevo capítulo</p>
+        <button onclick="mostrarMensaje()">Abrir Mensaje</button>
+    </div>
+    
+    <div id="mensaje">
+        Nunca pensé en hacer estas cosas pero siento esto como algo especial en parte, se que pasaste malos momentos en los años que estuviste en la universidad, espero de todo corazón.. no... se que este año será bueno para ti y espero que también para mi, un año lleno de nuevas oportunidades, de nuevos conocimientos, de aprendizajes, de nuevas experiencias, la pasé, paso y quiero seguir pasándola bien a tu lado, aprender mas y mas de ti, conocer cosas únicas de ti, eres alguien super divertida y alguien alegre, aprendí a entenderte al menos un poco y si me das la oportunidad quiero seguir conociéndote. Que en mi veas un hombre en el cual apoyarte, en el cual llorar, en el cual reír, contar chismecitos, anécdotas y reírnos juntos de nuestras tragedias, si un día sientes que te quedas sola siempre recuerda mis palabras y el hecho de que nunca te dejaré sola.. siempre y cuando me permitas estar a tu lado. Este año pasamos momentos divertidos, al menos eso pienso xd, pasamos momentos duros también.. pero... siento que aprendimos mucho y disfruto demasiado de tu compañía, eres la persona con la que más me gustaría congeniar. Siento que el tiempo pasa rápido y que sinceramente vamos a un paso firme, al inicio pensé que eras alguien cerrada, que no gustaba de pasar tiempo a solas pero luego de que me dijiste lo contrario pues no dudé en invitarte a cada cosa que planeo hacer, siempre eres la primera a quien aviso para jugar xd, para ver películas, para conversar de algo, espero que este año que viene sigamos con lo mismo y porque no, mejorar esto y ser aún más cercanos. Confío plenamente en ti, en que estarás ahí para cosas que pueda necesitar y te repito.. no dudes en llamarme o escribirme, siempre estaré disponible y alegre por escucharte o ayudarte. Te quiero mucho así toda sonsa, especial, rara y pues sí, eres rara.. eres única y eres especial por eso, vi cosas únicas en ti que en otra persona no vi, por ello me encanta siquiera enviarte un mensaje o jugar, si por mi fuera jugaría contigo todo el día, caminaría comiendo helado todo el día, estaría hablando contigo todo el día pero eso también dependerá de si aceptas eso o no. No quiero molestar más y solo me queda decirte feliz fin de año y que el año que viene la rompas, destruyas los ciclos, sigas congeniando más y más con tu familia, tus hermanos y sobre todo tu padre.. se nota que es un excelente padre. Te quiero.
+        
+        <div class="firma">Atte. Sebitas 💛</div>
+        
+        <button class="btn-cerrar" id="btnCerrar" onclick="cerrarMensaje()">Volver</button>
+    </div>
+</div>
+
+<script>
+    function mostrarMensaje() {
+        const pantallaInicial = document.getElementById("pantallaInicial");
+        const mensaje = document.getElementById("mensaje");
+        const btnCerrar = document.getElementById("btnCerrar");
+        
+        pantallaInicial.classList.add("ocultar");
+        setTimeout(() => {
+            mensaje.classList.add("mostrar");
+            btnCerrar.classList.add("mostrar");
+        }, 800);
+    }
+    
+    function cerrarMensaje() {
+        const pantallaInicial = document.getElementById("pantallaInicial");
+        const mensaje = document.getElementById("mensaje");
+        const btnCerrar = document.getElementById("btnCerrar");
+        
+        mensaje.classList.remove("mostrar");
+        btnCerrar.classList.remove("mostrar");
+        setTimeout(() => {
+            pantallaInicial.classList.remove("ocultar");
+        }, 800);
+    }
+
+    // Canvas para fuegos artificiales elegantes
+    const canvas = document.getElementById('fireworksCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b'];
+
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 3 + 0.5;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.alpha = 1;
+            this.decay = Math.random() * 0.015 + 0.008;
+            this.gravity = 0.08;
+            this.size = Math.random() * 2 + 0.5;
+        }
+
+        update() {
+            this.vy += this.gravity;
+            this.x += this.vx;
+            this.y += this.vy;
+            this.alpha -= this.decay;
+        }
+
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    function createFirework(x, y) {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const particleCount = 25;
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle(x, y, color));
+        }
+    }
+
+    function animate() {
+        ctx.fillStyle = 'rgba(15, 15, 35, 0.15)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            particles[i].update();
+            particles[i].draw();
+            
+            if (particles[i].alpha <= 0) {
+                particles.splice(i, 1);
+            }
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    // Fuegos artificiales sutiles cada 4 segundos
+    setInterval(() => {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * (canvas.height * 0.4);
+        createFirework(x, y);
+    }, 4000);
+
+    // Fuego artificial inicial
+    setTimeout(() => {
+        createFirework(canvas.width * 0.5, canvas.height * 0.3);
+    }, 1000);
+
+    animate();
+</script>
+
+</body>
+</html>
